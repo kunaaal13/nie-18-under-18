@@ -14,7 +14,7 @@
 <button
 	type="submit"
 	disabled={disabled || isSubmitting || isSuccess}
-	class="px-8 py-4 text-white text-lg md:text-xl font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 min-w-[280px] justify-center {isSuccess
+	class="cursor-pointer px-8 py-4 text-white text-lg md:text-xl font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 min-w-[280px] justify-center {isSuccess
 		? 'bg-green-600 hover:bg-green-700'
 		: 'bg-[#EC8622] hover:bg-[#d6771f]'}"
 >
