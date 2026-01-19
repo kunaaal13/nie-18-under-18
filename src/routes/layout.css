@@ -14,3 +14,11 @@
   --font-epilogue: "Epilogue", sans-serif; 
   --font-dina-chaumont: "DinaChaumont Display", sans-serif; 
 }
+
+@layer utilities {
+  .text-stroke-white {
+    -webkit-text-stroke-width: 5px;   /* adjust thickness – 8px–14px looks good for big hero text */
+    -webkit-text-stroke-color: white;
+    paint-order: stroke fill;          /* ensures stroke is behind fill, cleaner look */
+  }
+}
