@@ -31,7 +31,7 @@
         
         <!-- Right Fox -->
         <div class="shrink-0 flex justify-start">
-            <div class="max-w-[120px] sm:max-w-[120px] md:max-w-[180px] lg:max-w-[250px] xl:max-w-[300px]">
+            <div class="max-w-[150px] sm:max-w-[120px] md:max-w-[220px] lg:max-w-[290px] xl:max-w-[340px]">
                 <img 
                     src={RightLogo} 
                     alt="Right Fox Character" 
