@@ -9,7 +9,7 @@
 	import { validateForm, type FormData, type FieldErrors } from "$lib/formValidation";
 
 	// Google Scripts URL - Replace with your actual Google Apps Script web app URL
-	const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxchgoAs8ybdQn5JRoSly8tX37hRuId6nuuNvaLsUNw7c0b5BfxQ26HTvGqRahG5QFo/exec';
+	const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvFI3ZHnZLW37cDAqXqrMV0pn5JOd0IgqSWXhxLQSdIZ3ohYrW_QcEyr2r6wQ0YwRe/exec';
 
 	let formData = $state<FormData>({
 		fullName: "",
@@ -96,9 +96,29 @@
 		}, 5000);
 	}
 
+	// Helper to convert file to Base64
+    const fileToBase64 = (file: File): Promise<{ data: string, mimeType: string }> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                // Remove the "data:*/*;base64," prefix to get raw base64 string
+                const result = reader.result as string;
+                const base64Data = result.split(',')[1];
+                resolve({ 
+                    data: base64Data, 
+                    mimeType: file.type 
+                });
+            };
+            reader.onerror = error => reject(error);
+        });
+    };
+
 	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
 		e.stopPropagation();
+
+		console.log(formData);
 
 		// Prevent double submission
 		if (isSubmitting) {
@@ -128,36 +148,54 @@
 		isSuccess = false;
 
 		try {
-			// Create FormData for file upload
-			const submitData = new FormData();
-			submitData.append("fullName", formData.fullName.trim());
-			submitData.append("email", formData.email.trim());
-			submitData.append("class", formData.class.trim());
-			submitData.append("section", formData.section.trim());
-			submitData.append("school", formData.school.trim());
-			submitData.append("city", formData.city.trim());
-			submitData.append("schoolAddress", formData.schoolAddress.trim());
-			submitData.append("category", formData.category);
+			const payload: any = {
+				fullName: formData.fullName.trim(),
+				email: formData.email.trim(),
+				class: formData.class.trim(),
+				section: formData.section.trim(),
+				school: formData.school.trim(),
+				city: formData.city.trim(),
+				schoolAddress: formData.schoolAddress.trim(),
+				category: formData.category
+			};
 
-			if (formData.studentPhoto) {
-				submitData.append("studentPhoto", formData.studentPhoto);
-			}
+			// 2. Convert Files to Base64 if they exist
+            if (formData.studentPhoto) {
+                // Assuming formData.studentPhoto is a File object
+                // If it is a FileList, grab [0]
+                const file = formData.studentPhoto instanceof FileList 
+                    ? formData.studentPhoto[0] 
+                    : formData.studentPhoto;
+                    
+                if (file) payload.studentPhoto = await fileToBase64(file);
+            }
 
-			if (formData.supportingDocuments) {
-				submitData.append("supportingDocuments", formData.supportingDocuments);
-			}
+            if (formData.supportingDocuments) {
+                const file = formData.supportingDocuments instanceof FileList 
+                    ? formData.supportingDocuments[0] 
+                    : formData.supportingDocuments;
+                
+                if (file) payload.supportingDocuments = await fileToBase64(file);
+            }
 
-			// Submit to Google Scripts
-			const response = await fetch(GOOGLE_SCRIPT_URL, {
-				method: "POST",
-				body: submitData
-			});
+			// 3. Send as JSON (no-cors mode is TRICKY - see note below)
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8", 
+                },
+                // We use text/plain to avoid an excessively strict CORS preflight check
+                // but the body is valid JSON.
+                body: JSON.stringify(payload)
+            });
 
 			if (!response.ok) {
 				throw new Error("Failed to submit form");
 			}
 
 			await response.text();
+
+			console.log('response', response);
 
 			// Show success state
 			isSuccess = true;

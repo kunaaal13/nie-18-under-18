@@ -7,8 +7,8 @@ export interface FormData {
 	city: string;
 	schoolAddress: string;
 	category: string;
-	studentPhoto: File | null;
-	supportingDocuments: File | null;
+	studentPhoto: File | null | string;
+	supportingDocuments: File | null | string;
 }
 
 export interface FieldErrors {
