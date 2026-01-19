@@ -4,7 +4,7 @@
 
 </script>
 
-<div class="bg-[#EC8622] rounded-b-none rounded-t-3xl pb-6 sm:pb-8 md:pb-10 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-20 relative mt-[200px] sm:mt-[250px] md:mt-[300px] lg:mt-[350px] xl:mt-[400px]">
+<div class="bg-[#EC8622] rounded-b-none rounded-t-3xl pb-6 sm:pb-8 md:pb-10 flex flex-col items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-20 relative mt-[100px] sm:mt-[250px] md:mt-[300px] lg:mt-[350px] xl:mt-[400px]">
     <Logo />
 
     <div class="flex flex-col items-center justify-center gap-6 sm:gap-8 md:gap-10 pt-20 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 px-4 sm:px-6 md:px-8">
