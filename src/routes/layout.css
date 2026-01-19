@@ -1,1 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital@0;1&display=swap');
 @import 'tailwindcss';
+
+/* Dina Chaumont - Display weights */
+@font-face {
+	font-family: 'DinaChaumont Display';
+	src: url('/src/lib/fonts/dina.otf') format('opentype');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@theme {
+  --font-epilogue: "Epilogue", sans-serif; 
+  --font-dina-chaumont: "DinaChaumont Display", sans-serif; 
+}

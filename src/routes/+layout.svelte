@@ -13,4 +13,5 @@
 </svelte:head>
 
 
-{@render children()}
+<main class="min-h-screen w-full font-epilogue">{@render children()}</main>
+
