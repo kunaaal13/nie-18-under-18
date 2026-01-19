@@ -9,7 +9,7 @@
 	import { validateForm, type FormData, type FieldErrors } from "$lib/formValidation";
 
 	// Google Scripts URL - Replace with your actual Google Apps Script web app URL
-	const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
+	const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxchgoAs8ybdQn5JRoSly8tX37hRuId6nuuNvaLsUNw7c0b5BfxQ26HTvGqRahG5QFo/exec';
 
 	let formData = $state<FormData>({
 		fullName: "",

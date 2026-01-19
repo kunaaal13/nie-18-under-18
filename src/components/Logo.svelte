@@ -2,10 +2,15 @@
     import LeftLogo from "$lib/assets/left.svg";
     import RightLogo from "$lib/assets/right.svg";
     import EighteenUnderEighteen from "$lib/assets/18-under-18.svg";
+    import NIELogo from "$lib/assets/nie-logo.svg";
 </script>
 
-<div class="w-full absolute top-[-30%] md:top-[-58%] flex items-center justify-center px-2 sm:px-4 md:px-8 py-4 sm:py-6 md:py-8 lg:py-12">
-    <!-- Hero section with foxes and sign - always horizontal, responsive sizes -->
+<div class="w-full absolute top-[-40%] md:top-[-75%] px-2 sm:px-4 md:px-8 py-4 sm:py-6 md:py-8 lg:py-12 flex flex-col items-center justify-center gap-4">
+    <img src={NIELogo} alt="NIE Logo" class="h-16 sm:h-20 md:h-24 lg:h-28 xl:h-32 object-contain" />
+
+
+    <div class="flex items-center justify-center w-full">
+        <!-- Hero section with foxes and sign - always horizontal, responsive sizes -->
     <div class="w-full flex flex-row items-center justify-center gap-1 sm:gap-2 md:gap-4 lg:gap-8 xl:gap-12">
         <!-- Left Fox -->
         <div class="shrink-0 flex justify-end">
@@ -39,5 +44,6 @@
                 />
             </div>
         </div>
+    </div>
     </div>
 </div>
