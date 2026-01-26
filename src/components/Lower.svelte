@@ -1,27 +1,29 @@
 <script lang="ts">
-	import Star from "./svgs/star.svelte";
-	import FormInput from "./FormInput.svelte";
-	import FormTextarea from "./FormTextarea.svelte";
-	import FormSelect from "./FormSelect.svelte";
-	import FileUpload from "./FileUpload.svelte";
-	import SubmitButton from "./SubmitButton.svelte";
-	import Toast from "./Toast.svelte";
-	import { validateForm, type FormData, type FieldErrors } from "$lib/formValidation";
+	import Star from './svgs/star.svelte';
+	import FormInput from './FormInput.svelte';
+	import FormTextarea from './FormTextarea.svelte';
+	import FormSelect from './FormSelect.svelte';
+	import FileUpload from './FileUpload.svelte';
+	import SubmitButton from './SubmitButton.svelte';
+	import Toast from './Toast.svelte';
+	import { validateForm, type FormData, type FieldErrors } from '$lib/formValidation';
+	import FormSubmissionError from '$lib/error';
 
 	// Google Scripts URL - Replace with your actual Google Apps Script web app URL
-	const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvFI3ZHnZLW37cDAqXqrMV0pn5JOd0IgqSWXhxLQSdIZ3ohYrW_QcEyr2r6wQ0YwRe/exec';
+	const GOOGLE_SCRIPT_URL =
+		'https://script.google.com/macros/s/AKfycbzcpwgSwFEPZF6PNsKBJiVTl-ytV0OPVt7bDYyZPSL3CtEaFraRrY19RwUYOtx4vUEM/exec';
 
 	let formData = $state<FormData>({
-		fullName: "",
-		email: "",
-		class: "",
-		section: "",
-		school: "",
-		city: "",
-		schoolAddress: "",
-		category: "",
+		fullName: '',
+		email: '',
+		class: '',
+		section: '',
+		school: '',
+		city: '',
+		schoolAddress: '',
+		category: '',
 		studentPhoto: null,
-		supportingDocuments: ""
+		supportingDocuments: ''
 	});
 
 	let isSubmitting = $state(false);
@@ -30,38 +32,39 @@
 	let fieldErrors = $state<FieldErrors>({});
 	let showToast = $state(false);
 	let toastTimeout: ReturnType<typeof setTimeout> | null = null;
+	let toastState: { message: string; type: 'error' | 'success' } | null = $state(null);
 
 	const categories = [
-		"Academic Excellence",
-		"Arts & Creativity",
-		"Athletics & Sports",
-		"Community Service",
-		"Entrepreneurship",
-		"Environmental Action",
-		"Innovation & Technology",
-		"Leadership",
-		"Literature & Writing",
-		"Music & Performing Arts",
-		"Science & Research",
-		"Social Impact",
-		"STEM",
-		"Visual Arts",
-		"Other"
+		'Academic Excellence',
+		'Arts & Creativity',
+		'Athletics & Sports',
+		'Community Service',
+		'Entrepreneurship',
+		'Environmental Action',
+		'Innovation & Technology',
+		'Leadership',
+		'Literature & Writing',
+		'Music & Performing Arts',
+		'Science & Research',
+		'Social Impact',
+		'STEM',
+		'Visual Arts',
+		'Other'
 	];
 
 	const cities = [
-		"Mumbai",
-		"Hyderabad",
-		"Delhi",
-		"Pune",
-		"Kolkata",
-		"Chandigarh",
-		"Coimbatore",
-		"Chennai",
-		"Jaipur",
-		"Bangalore",
-		"Lucknow",
-		"Ahmedabad"
+		'Mumbai',
+		'Hyderabad',
+		'Delhi',
+		'Pune',
+		'Kolkata',
+		'Chandigarh',
+		'Coimbatore',
+		'Chennai',
+		'Jaipur',
+		'Bangalore',
+		'Lucknow',
+		'Ahmedabad'
 	];
 
 	function clearFieldError(fieldName: string) {
@@ -74,63 +77,63 @@
 
 	// Clear errors when fields are updated
 	$effect(() => {
-		if (formData.fullName) clearFieldError("fullName");
+		if (formData.fullName) clearFieldError('fullName');
 	});
 	$effect(() => {
-		if (formData.email) clearFieldError("email");
+		if (formData.email) clearFieldError('email');
 	});
 	$effect(() => {
-		if (formData.class) clearFieldError("class");
+		if (formData.class) clearFieldError('class');
 	});
 	$effect(() => {
-		if (formData.section) clearFieldError("section");
+		if (formData.section) clearFieldError('section');
 	});
 	$effect(() => {
-		if (formData.school) clearFieldError("school");
+		if (formData.school) clearFieldError('school');
 	});
 	$effect(() => {
-		if (formData.city) clearFieldError("city");
+		if (formData.city) clearFieldError('city');
 	});
 	$effect(() => {
-		if (formData.schoolAddress) clearFieldError("schoolAddress");
+		if (formData.schoolAddress) clearFieldError('schoolAddress');
 	});
 	$effect(() => {
-		if (formData.category) clearFieldError("category");
+		if (formData.category) clearFieldError('category');
 	});
 	$effect(() => {
-		if (formData.studentPhoto) clearFieldError("studentPhoto");
+		if (formData.studentPhoto) clearFieldError('studentPhoto');
 	});
 	$effect(() => {
-		if (formData.supportingDocuments) clearFieldError("supportingDocuments");
+		if (formData.supportingDocuments) clearFieldError('supportingDocuments');
 	});
 
-	function showErrorToast() {
-		showToast = true;
+	function showErrorToast(message: string, type: 'error' | 'success' = 'error') {
+		toastState = { message, type };
 		if (toastTimeout) {
 			clearTimeout(toastTimeout);
 		}
 		toastTimeout = setTimeout(() => {
-			showToast = false;
+			toastState = null;
 		}, 5000);
 	}
 
 	// Helper to convert file to Base64
-    const fileToBase64 = (file: File): Promise<{ data: string, mimeType: string }> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                // Remove the "data:*/*;base64," prefix to get raw base64 string
-                const result = reader.result as string;
-                const base64Data = result.split(',')[1];
-                resolve({ 
-                    data: base64Data, 
-                    mimeType: file.type 
-                });
-            };
-            reader.onerror = error => reject(error);
-        });
-    };
+	const fileToBase64 = (file: File): Promise<{ data: string; mimeType: string }> => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => {
+				// Remove the "data:*/*;base64," prefix to get raw base64 string
+				const result = reader.result as string;
+				const base64Data = result.split(',')[1];
+				resolve({
+					data: base64Data,
+					mimeType: file.type
+				});
+			};
+			reader.onerror = (error) => reject(error);
+		});
+	};
 
 	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
@@ -154,7 +157,7 @@
 			const firstErrorField = Object.keys(validation.errors)[0];
 			const errorElement = formElement.querySelector(`#${firstErrorField}`);
 			if (errorElement) {
-				errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+				errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
 				(errorElement as HTMLElement).focus();
 			}
 			return;
@@ -178,33 +181,36 @@
 			};
 
 			// 2. Convert Files to Base64 if they exist
-            if (formData.studentPhoto && formData.studentPhoto instanceof File) {
-                payload.studentPhoto = await fileToBase64(formData.studentPhoto);
-            }
-
-            // Supporting documents is now a Google Drive link (string)
-            if (formData.supportingDocuments && formData.supportingDocuments.trim()) {
-                payload.supportingDocuments = formData.supportingDocuments.trim();
-            }
-
-			// 3. Send as JSON (no-cors mode is TRICKY - see note below)
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "text/plain;charset=utf-8", 
-                },
-                // We use text/plain to avoid an excessively strict CORS preflight check
-                // but the body is valid JSON.
-                body: JSON.stringify(payload)
-            });
-
-			if (!response.ok) {
-				throw new Error("Failed to submit form");
+			if (formData.studentPhoto && formData.studentPhoto instanceof File) {
+				payload.studentPhoto = await fileToBase64(formData.studentPhoto);
 			}
 
-			await response.text();
+			// Supporting documents is now a Google Drive link (string)
+			if (formData.supportingDocuments && formData.supportingDocuments.trim()) {
+				payload.supportingDocuments = formData.supportingDocuments.trim();
+			}
 
-			console.log('response', response);
+			// 3. Send as JSON (no-cors mode is TRICKY - see note below)
+			const response = await fetch(GOOGLE_SCRIPT_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'text/plain;charset=utf-8'
+				},
+				// We use text/plain to avoid an excessively strict CORS preflight check
+				// but the body is valid JSON.
+				body: JSON.stringify(payload)
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to submit form');
+			}
+
+			const data = await response.json();
+
+			if (data.status === 'error') {
+				throw new FormSubmissionError(data.message);
+			}
+			console.log('response', data);
 
 			// Show success state
 			isSuccess = true;
@@ -213,52 +219,62 @@
 			// Reset form after 3 seconds
 			setTimeout(() => {
 				formData = {
-					fullName: "",
-					email: "",
-					class: "",
-					section: "",
-					school: "",
-					city: "",
-					schoolAddress: "",
-					category: "",
+					fullName: '',
+					email: '',
+					class: '',
+					section: '',
+					school: '',
+					city: '',
+					schoolAddress: '',
+					category: '',
 					studentPhoto: null,
-					supportingDocuments: ""
+					supportingDocuments: ''
 				};
 				fieldErrors = {};
 				isSuccess = false;
 				formElement?.reset();
 			}, 3000);
 		} catch (error) {
-			console.error("Form submission error:", error);
+			if (error instanceof FormSubmissionError) {
+				showErrorToast(error.message);
+			} else {
+				showErrorToast('An unknown error occurred');
+			}
+
 			isSubmitting = false;
 			isSuccess = false;
-			showErrorToast();
 		}
 	}
 </script>
 
-<div class="bg-[rgb(87,203,245)] rounded-b-3xl rounded-t-none px-4 md:px-10 lg:px-20 py-10 md:py-16 relative">
-	<Toast message="Something went wrong" type="error" show={showToast} />
-	<Star class="absolute top-20 left-0 md:left-10 size-16 md:size-20 opacity-80" />
-	<Star class="absolute bottom-20 right-0 md:right-10 size-16 md:size-20 opacity-80" />
+<div
+	class="relative rounded-t-none rounded-b-3xl bg-[rgb(87,203,245)] px-4 py-10 md:px-10 md:py-16 lg:px-20"
+>
+	<Toast
+		message={toastState?.message || ''}
+		type={toastState?.type || 'error'}
+		show={toastState !== null}
+	/>
+	<Star class="absolute top-20 left-0 size-16 opacity-80 md:left-10 md:size-20" />
+	<Star class="absolute right-0 bottom-20 size-16 opacity-80 md:right-10 md:size-20" />
 
 	<h2
-		class="text-[#CA3328] text-4xl md:text-5xl lg:text-6xl font-extrabold font-dina-chaumont text-center py-6 md:py-10 text-stroke-white"
+		class="text-stroke-white py-6 text-center font-dina-chaumont text-4xl font-extrabold text-[#CA3328] md:py-10 md:text-5xl lg:text-6xl"
 	>
 		Ready to Nominate a Student?
 	</h2>
 
-	<div class="flex flex-col items-center justify-center gap-2 mb-8 md:mb-12">
-		<p class="text-[#333333] text-center text-lg md:text-xl font-medium">
+	<div class="mb-8 flex flex-col items-center justify-center gap-2 md:mb-12">
+		<p class="text-center text-lg font-medium text-[#333333] md:text-xl">
 			Share the details below to get started.
 		</p>
 
-		<p class="text-[#333333] text-center text-lg md:text-xl font-normal italic">
+		<p class="text-center text-lg font-normal text-[#333333] italic md:text-xl">
 			Nomination Form Fields
 		</p>
 	</div>
 
-	<form bind:this={formElement} onsubmit={handleSubmit} class="max-w-4xl mx-auto" novalidate>
+	<form bind:this={formElement} onsubmit={handleSubmit} class="mx-auto max-w-4xl" novalidate>
 		<FormInput
 			id="fullName"
 			label="Full Name"
@@ -369,17 +385,16 @@
 		/>
 
 		<!-- Note -->
-		<div class="mb-8 p-4 bg-white/50 rounded-lg">
-			<p class="text-[#333333] text-sm md:text-base leading-relaxed">
-				Please note: Each school may use one official email ID for all
-				submissions. Schools can submit up to 5 entries in total, across any 5
-				of the 18 categories.
+		<div class="mb-8 rounded-lg bg-white/50 p-4">
+			<p class="text-sm leading-relaxed text-[#333333] md:text-base">
+				Please note: Each school may use one official email ID for all submissions. Schools can
+				submit up to 18 entry in total, where each category can have only one entry.
 			</p>
 		</div>
 
 		<!-- Submit Button -->
 		<div class="flex justify-center">
-			<SubmitButton isSubmitting={isSubmitting} isSuccess={isSuccess} disabled={isSubmitting} />
+			<SubmitButton {isSubmitting} {isSuccess} disabled={isSubmitting} />
 		</div>
 	</form>
 </div>
