@@ -280,7 +280,7 @@
 	<form bind:this={formElement} onsubmit={handleSubmit} class="mx-auto max-w-4xl" novalidate>
 		<FormInput
 			id="fullName"
-			label="Full Name"
+			label="Student's Full Name"
 			type="text"
 			bind:value={formData.fullName}
 			placeholder="Enter full name"
@@ -290,8 +290,19 @@
 		/>
 
 		<FormInput
+			id="school"
+			label="School Name"
+			type="text"
+			bind:value={formData.school}
+			placeholder="Enter school name"
+			required={true}
+			disabled={isSubmitting}
+			error={fieldErrors.school}
+		/>
+
+		<FormInput
 			id="email"
-			label="Email ID (student/parent)"
+			label="Email Id School"
 			type="email"
 			bind:value={formData.email}
 			placeholder="Enter email address"
@@ -322,15 +333,14 @@
 			error={fieldErrors.section}
 		/>
 
-		<FormInput
-			id="school"
-			label="School"
-			type="text"
-			bind:value={formData.school}
-			placeholder="Enter school name"
+		<FormTextarea
+			id="schoolAddress"
+			label="School Address"
+			bind:value={formData.schoolAddress}
+			placeholder="Enter school address"
 			required={true}
 			disabled={isSubmitting}
-			error={fieldErrors.school}
+			error={fieldErrors.schoolAddress}
 		/>
 
 		<FormSelect
@@ -342,16 +352,6 @@
 			required={true}
 			disabled={isSubmitting}
 			error={fieldErrors.city}
-		/>
-
-		<FormTextarea
-			id="schoolAddress"
-			label="School Address"
-			bind:value={formData.schoolAddress}
-			placeholder="Enter school address"
-			required={true}
-			disabled={isSubmitting}
-			error={fieldErrors.schoolAddress}
 		/>
 
 		<FormSelect
@@ -390,8 +390,8 @@
 		<!-- Note -->
 		<div class="mb-8 rounded-lg bg-white/50 p-4">
 			<p class="text-sm leading-relaxed text-[#333333] md:text-base">
-				Please note: Each school may use one official email ID for all submissions. Schools can
-				submit up to 18 entry in total, where each category can have only one entry.
+				Please note: Each school can nominate only one student per category, with a maximum of 18
+				students in total.
 			</p>
 		</div>
 
