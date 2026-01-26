@@ -11,7 +11,7 @@
 
 	// Google Scripts URL - Replace with your actual Google Apps Script web app URL
 	const GOOGLE_SCRIPT_URL =
-		'https://script.google.com/macros/s/AKfycbzcpwgSwFEPZF6PNsKBJiVTl-ytV0OPVt7bDYyZPSL3CtEaFraRrY19RwUYOtx4vUEM/exec';
+		'https://script.google.com/macros/s/AKfycbyffIcvEjdXoo_xywbtqYBRv2aqVMVk7K5gSCCLC9rj_A7F5J8sCQ6DWUrVJRRZpbJcyA/exec';
 
 	let formData = $state<FormData>({
 		fullName: '',
@@ -35,21 +35,24 @@
 	let toastState: { message: string; type: 'error' | 'success' } | null = $state(null);
 
 	const categories = [
-		'Academic Excellence',
-		'Arts & Creativity',
-		'Athletics & Sports',
-		'Community Service',
-		'Entrepreneurship',
-		'Environmental Action',
-		'Innovation & Technology',
-		'Leadership',
-		'Literature & Writing',
-		'Music & Performing Arts',
-		'Science & Research',
-		'Social Impact',
-		'STEM',
-		'Visual Arts',
-		'Other'
+		'Young Entrepreneur of the Year',
+		'Tech & Innovation Star',
+		'Young Inventor Award',
+		'Research & Discovery Award',
+		'Medical & Health Innovator',
+		'⁠Young Writer/Author',
+		'Budding Journalist',
+		'Dance Icon',
+		'Music Prodigy',
+		'Social Changemaker',
+		'Rising star - Performing Arts',
+		'Mental Health Advocate',
+		'Storyteller of the Year',
+		'Athlete of the Year',
+		'Digital Creativity (Content Creator)',
+		'Culinary Talent',
+		'Debate & Public Speaking Star',
+		'Innovation in Fashion'
 	];
 
 	const cities = [
