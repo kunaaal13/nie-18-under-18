@@ -21,7 +21,7 @@
 		schoolAddress: "",
 		category: "",
 		studentPhoto: null,
-		supportingDocuments: null
+		supportingDocuments: ""
 	});
 
 	let isSubmitting = $state(false);
@@ -47,6 +47,21 @@
 		"STEM",
 		"Visual Arts",
 		"Other"
+	];
+
+	const cities = [
+		"Mumbai",
+		"Hyderabad",
+		"Delhi",
+		"Pune",
+		"Kolkata",
+		"Chandigarh",
+		"Coimbatore",
+		"Chennai",
+		"Jaipur",
+		"Bangalore",
+		"Lucknow",
+		"Ahmedabad"
 	];
 
 	function clearFieldError(fieldName: string) {
@@ -84,6 +99,9 @@
 	});
 	$effect(() => {
 		if (formData.studentPhoto) clearFieldError("studentPhoto");
+	});
+	$effect(() => {
+		if (formData.supportingDocuments) clearFieldError("supportingDocuments");
 	});
 
 	function showErrorToast() {
@@ -160,22 +178,13 @@
 			};
 
 			// 2. Convert Files to Base64 if they exist
-            if (formData.studentPhoto) {
-                // Assuming formData.studentPhoto is a File object
-                // If it is a FileList, grab [0]
-                const file = formData.studentPhoto instanceof FileList 
-                    ? formData.studentPhoto[0] 
-                    : formData.studentPhoto;
-                    
-                if (file) payload.studentPhoto = await fileToBase64(file);
+            if (formData.studentPhoto && formData.studentPhoto instanceof File) {
+                payload.studentPhoto = await fileToBase64(formData.studentPhoto);
             }
 
-            if (formData.supportingDocuments) {
-                const file = formData.supportingDocuments instanceof FileList 
-                    ? formData.supportingDocuments[0] 
-                    : formData.supportingDocuments;
-                
-                if (file) payload.supportingDocuments = await fileToBase64(file);
+            // Supporting documents is now a Google Drive link (string)
+            if (formData.supportingDocuments && formData.supportingDocuments.trim()) {
+                payload.supportingDocuments = formData.supportingDocuments.trim();
             }
 
 			// 3. Send as JSON (no-cors mode is TRICKY - see note below)
@@ -213,7 +222,7 @@
 					schoolAddress: "",
 					category: "",
 					studentPhoto: null,
-					supportingDocuments: null
+					supportingDocuments: ""
 				};
 				fieldErrors = {};
 				isSuccess = false;
@@ -305,12 +314,12 @@
 			error={fieldErrors.school}
 		/>
 
-		<FormInput
+		<FormSelect
 			id="city"
 			label="City"
-			type="text"
 			bind:value={formData.city}
-			placeholder="Enter city"
+			options={cities}
+			placeholder="Select a city"
 			required={true}
 			disabled={isSubmitting}
 			error={fieldErrors.city}
@@ -348,15 +357,15 @@
 			error={fieldErrors.studentPhoto}
 		/>
 
-		<FileUpload
+		<FormInput
 			id="supportingDocuments"
-			label="Upload Supporting Documents"
-			bind:file={formData.supportingDocuments}
-			accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+			label="Supporting Documents (Google Drive Link)"
+			type="url"
+			bind:value={formData.supportingDocuments}
+			placeholder="Enter Google Drive link"
 			required={false}
 			disabled={isSubmitting}
-			iconType="upload"
-			helperText="(Certificates, project details, portfolios, links, or relevant work)"
+			error={fieldErrors.supportingDocuments}
 		/>
 
 		<!-- Note -->
