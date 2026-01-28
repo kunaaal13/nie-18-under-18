@@ -188,10 +188,8 @@
 				payload.studentPhoto = await fileToBase64(formData.studentPhoto);
 			}
 
-			// Supporting documents is now a Google Drive link (string)
-			if (formData.supportingDocuments && formData.supportingDocuments.trim()) {
-				payload.supportingDocuments = formData.supportingDocuments.trim();
-			}
+			// Supporting documents is now a Google Drive link (string) - required field
+			payload.supportingDocuments = formData.supportingDocuments.trim();
 
 			// 3. Send as JSON (no-cors mode is TRICKY - see note below)
 			const response = await fetch(GOOGLE_SCRIPT_URL, {
@@ -382,7 +380,7 @@
 			type="url"
 			bind:value={formData.supportingDocuments}
 			placeholder="Enter Google Drive link"
-			required={false}
+			required={true}
 			disabled={isSubmitting}
 			error={fieldErrors.supportingDocuments}
 		/>
