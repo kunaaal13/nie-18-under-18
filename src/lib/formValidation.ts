@@ -7,6 +7,7 @@ export interface FormData {
 	city: string;
 	schoolAddress: string;
 	category: string;
+	remarks: string;
 	studentPhoto: File | null;
 	supportingDocuments: string;
 }
@@ -32,6 +33,7 @@ export function validateForm(form: HTMLFormElement): {
 		{ name: 'city', label: 'City' },
 		{ name: 'schoolAddress', label: 'School Address' },
 		{ name: 'category', label: 'Category' },
+		{ name: 'remarks', label: 'Remarks' },
 		{ name: 'studentPhoto', label: 'Student Photograph' },
 		{ name: 'supportingDocuments', label: 'Supporting Documents' }
 	];
@@ -53,6 +55,18 @@ export function validateForm(form: HTMLFormElement): {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		if (!emailRegex.test(email)) {
 			errors.email = 'Please enter a valid email address';
+		}
+	}
+
+	// Validate remarks word count (300 words max)
+	const remarks = formData.get('remarks');
+	if (remarks && typeof remarks === 'string' && remarks.trim()) {
+		const wordCount = remarks
+			.trim()
+			.split(/\s+/)
+			.filter((word) => word.length > 0).length;
+		if (wordCount > 300) {
+			errors.remarks = 'Remarks must not exceed 300 words';
 		}
 	}
 

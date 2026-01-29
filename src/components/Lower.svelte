@@ -11,7 +11,7 @@
 
 	// Google Scripts URL - Replace with your actual Google Apps Script web app URL
 	const GOOGLE_SCRIPT_URL =
-		'https://script.google.com/macros/s/AKfycbyffIcvEjdXoo_xywbtqYBRv2aqVMVk7K5gSCCLC9rj_A7F5J8sCQ6DWUrVJRRZpbJcyA/exec';
+		'https://script.google.com/macros/s/AKfycbyqO9RsQsSev4hXomM3ICUO-lyI4GOSZ3USvank17-6lktrZ9w03rGM0fU9twhgFuznrg/exec';
 
 	let formData = $state<FormData>({
 		fullName: '',
@@ -22,6 +22,7 @@
 		city: '',
 		schoolAddress: '',
 		category: '',
+		remarks: '',
 		studentPhoto: null,
 		supportingDocuments: ''
 	});
@@ -30,7 +31,6 @@
 	let isSuccess = $state(false);
 	let formElement: HTMLFormElement | undefined = $state();
 	let fieldErrors = $state<FieldErrors>({});
-	let showToast = $state(false);
 	let toastTimeout: ReturnType<typeof setTimeout> | null = null;
 	let toastState: { message: string; type: 'error' | 'success' } | null = $state(null);
 
@@ -102,6 +102,9 @@
 	});
 	$effect(() => {
 		if (formData.category) clearFieldError('category');
+	});
+	$effect(() => {
+		if (formData.remarks) clearFieldError('remarks');
 	});
 	$effect(() => {
 		if (formData.studentPhoto) clearFieldError('studentPhoto');
@@ -180,7 +183,8 @@
 				school: formData.school.trim(),
 				city: formData.city.trim(),
 				schoolAddress: formData.schoolAddress.trim(),
-				category: formData.category
+				category: formData.category,
+				remarks: formData.remarks.trim()
 			};
 
 			// 2. Convert Files to Base64 if they exist
@@ -228,6 +232,7 @@
 					city: '',
 					schoolAddress: '',
 					category: '',
+					remarks: '',
 					studentPhoto: null,
 					supportingDocuments: ''
 				};
@@ -363,6 +368,18 @@
 			error={fieldErrors.category}
 		/>
 
+		<FormTextarea
+			id="remarks"
+			label="Remarks"
+			bind:value={formData.remarks}
+			placeholder="Tell us why this student deserves to win"
+			description="Tell us why this student deserves to win (300 words max)"
+			required={true}
+			disabled={isSubmitting}
+			rows={5}
+			error={fieldErrors.remarks}
+		/>
+
 		<FileUpload
 			id="studentPhoto"
 			label="Upload Student Photograph"
@@ -380,6 +397,7 @@
 			type="url"
 			bind:value={formData.supportingDocuments}
 			placeholder="Enter Google Drive link"
+			description="E.g. profile summary, certificates, achievements, awards, or recognitions"
 			required={true}
 			disabled={isSubmitting}
 			error={fieldErrors.supportingDocuments}
