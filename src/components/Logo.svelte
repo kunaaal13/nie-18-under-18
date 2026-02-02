@@ -6,7 +6,7 @@
 </script>
 
 <div
-	class="absolute top-[-40%] flex w-full flex-col items-center justify-center gap-4 px-2 py-4 sm:px-4 sm:py-6 md:top-[-58%] md:px-8 md:py-8 lg:py-12"
+	class="absolute top-[-40%] flex w-full flex-col items-center justify-center gap-4 px-2 py-4 sm:px-4 sm:py-6 md:top-[-66%] md:px-8 md:py-8 lg:py-12"
 >
 	<img src={NIELogo} alt="NIE Logo" class="h-16 object-contain sm:h-20 md:h-24 lg:h-28 xl:h-32" />
 
